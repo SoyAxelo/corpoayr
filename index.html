@@ -218,6 +218,10 @@
   .promo-ticks span{width:26px;height:3px;background:var(--line);transition:background .3s}
   .promo-ticks span.active{background:var(--flame)}
 
+  .promo-two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:56px}
+  .promo-two-col .promo-slider-wrap{max-width:none}
+  .promo-two-col .promo-slider{aspect-ratio:5/7}
+
   /* About */
   .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:center}
   .about-logo{display:flex;align-items:center;justify-content:center}
@@ -335,6 +339,7 @@
     .footer-grid{grid-template-columns:1fr 1fr}
     .services-grid{grid-template-columns:repeat(2,1fr)}
     .chillers-grid{grid-template-columns:1fr}
+    .promo-two-col{grid-template-columns:1fr;max-width:500px;margin-left:auto;margin-right:auto}
   }
   @media (max-width:680px){
     nav:not(.open),.nav-actions .btn-outline-dark{display:none}
@@ -532,6 +537,34 @@
       </div>
       <div class="promo-ticks">
         <span class="active"></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="promo-two-col">
+      <div class="promo-slider-wrap reveal">
+        <div class="promo-slider" id="promoSliderLeft">
+          <img class="active" src="assets/ac-residencial.webp" alt="Aire acondicionado residencial Corpoayr">
+          <img src="assets/ac-industrial.webp" alt="Aire acondicionado industrial Corpoayr">
+          <img src="assets/refrigeracion.webp" alt="Refrigeración Corpoayr">
+          <img src="assets/refrigeracion-comercial.webp" alt="Refrigeración comercial Corpoayr">
+          <img src="assets/cuartos-frios.webp" alt="Cuartos fríos Corpoayr">
+        </div>
+        <div class="promo-ticks">
+          <span class="active"></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="promo-slider-wrap reveal">
+        <div class="promo-slider" id="promoSliderRight">
+          <img class="active" src="assets/sistemas-extraccion.webp" alt="Sistemas de extracción Corpoayr">
+          <img src="assets/aislantes-termoacusticos.webp" alt="Aislantes termoacústicos Corpoayr">
+          <img src="assets/enfriamiento-adiabatico.webp" alt="Sistema de enfriamiento adiabático Corpoayr">
+          <img src="assets/compresores.webp" alt="Compresores Corpoayr">
+          <img src="assets/gas-refrigerante.webp" alt="Gas refrigerante Corpoayr">
+          <img src="assets/refaccionamiento.webp" alt="Refaccionamiento Corpoayr">
+        </div>
+        <div class="promo-ticks">
+          <span class="active"></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -743,26 +776,32 @@
   burger.addEventListener('click', () => nav.classList.toggle('open'));
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 
-  const promoSlider = document.getElementById('promoSlider');
-  const promoImgs = promoSlider.querySelectorAll('img');
-  const promoTicks = document.querySelectorAll('.promo-ticks span');
-  let promoIndex = 0;
-  setInterval(() => {
-    promoImgs[promoIndex].classList.remove('active');
-    promoTicks[promoIndex].classList.remove('active');
-    promoIndex = (promoIndex + 1) % promoImgs.length;
-    promoImgs[promoIndex].classList.add('active');
-    promoTicks[promoIndex].classList.add('active');
-  }, 5000);
-
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
-  promoSlider.addEventListener('click', () => {
-    lightboxImg.src = promoImgs[promoIndex].src;
-    lightbox.classList.add('open');
-  });
   document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
   lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+
+  function initSlider(id) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    const imgs = slider.querySelectorAll('img');
+    const ticks = slider.parentElement.querySelectorAll('.promo-ticks span');
+    let index = 0;
+    setInterval(() => {
+      imgs[index].classList.remove('active');
+      ticks[index].classList.remove('active');
+      index = (index + 1) % imgs.length;
+      imgs[index].classList.add('active');
+      ticks[index].classList.add('active');
+    }, 5000);
+    slider.addEventListener('click', () => {
+      lightboxImg.src = imgs[index].src;
+      lightbox.classList.add('open');
+    });
+  }
+  initSlider('promoSlider');
+  initSlider('promoSliderLeft');
+  initSlider('promoSliderRight');
 
   document.getElementById('quoteForm').addEventListener('submit', function (e) {
     e.preventDefault();
